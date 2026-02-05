@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="tabTitle">ULKA : CS Dashboard v.0.1.2 Beta</title>
+    <title id="tabTitle">ULKA : CS Dashboard v.0.1.3 Beta</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -13,13 +13,10 @@
             --glass: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.18);
             --text: #ffffff;
-            --primary: #ff8c00; /* สีส้ม ULKA ยังอยู่ตรงตัวหนังสือ/ปุ่ม */
-            
-            /* 🔵 ปรับพื้นหลังเป็นโทนน้ำเงินล้วน (Deep Blue Mesh) */
+            --primary: #ff8c00; 
             --bg-mesh: radial-gradient(at 0% 0%, #003399 0, transparent 50%), 
                        radial-gradient(at 100% 0%, #002266 0, transparent 50%), 
                        radial-gradient(at 50% 100%, #001a4d 0, transparent 50%);
-                       
             --font-main: 'Inter', 'Kanit', sans-serif;
         }
 
@@ -32,7 +29,7 @@
 
         body {
             font-family: var(--font-main);
-            background-color: #000d21; /* พื้นหลังน้ำเงินเข้มเกือบดำ */
+            background-color: #000d21;
             background-image: var(--bg-mesh);
             background-attachment: fixed;
             background-size: cover;
@@ -41,7 +38,6 @@
             min-height: 100vh;
             transition: 0.3s;
             -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .container { max-width: 1450px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
@@ -61,15 +57,36 @@
         .top-section { display: grid; grid-template-columns: 1fr; gap: 15px; }
         @media (min-width: 1100px) { .top-section { grid-template-columns: 1.8fr 1.2fr; } }
 
+        /* 🟢 Leaderboard & Performance */
         .leaderboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
         @media (min-width: 600px) { .leaderboard-grid { grid-template-columns: repeat(4, 1fr); } }
         
-        .person-card { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-radius: 16px; color: white; cursor: pointer; border: 2px solid transparent; transition: 0.3s; }
+        .person-card { padding: 12px 15px; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px; color: white; cursor: pointer; border: 2px solid transparent; transition: 0.3s; min-height: 80px; }
+        .person-card-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .person-card.active-filter { border-color: #fff; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        
         .card-best { background: linear-gradient(135deg, #d63031, #ff4757); } 
         .card-friend { background: linear-gradient(135deg, #0984e3, #2e86de); } 
         .card-ball { background: linear-gradient(135deg, #e67e22, #f39c12); } 
         .card-ohm { background: linear-gradient(135deg, #f1c40f, #ff9f43); color: #000; }
+
+        .perf-bar-bg { width: 100%; height: 4px; background: rgba(0,0,0,0.2); border-radius: 4px; margin-top: 8px; overflow: hidden; }
+        .perf-bar-fill { height: 100%; background: #fff; border-radius: 4px; transition: width 0.5s ease; opacity: 0.9; }
+        .perf-text { font-size: 10px; margin-top: 4px; opacity: 0.8; font-weight: 600; text-align: right; }
+
+        /* 🚨 Urgent Ticker Styles */
+        .urgent-ticker-container { 
+            width: 100%; overflow: hidden; white-space: nowrap; 
+            background: rgba(220, 53, 69, 0.15); border: 1px solid rgba(220, 53, 69, 0.4); 
+            border-radius: 12px; margin-bottom: 10px; display: none; /* Hide if empty */
+            position: relative; height: 36px; display: flex; align-items: center;
+        }
+        .urgent-ticker-content {
+            display: inline-block; padding-left: 100%;
+            animation: ticker 25s linear infinite;
+            font-size: 13px; font-weight: 700; color: #ff6b6b; font-family: 'Kanit';
+        }
+        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         @media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(5, 1fr); } }
@@ -100,8 +117,7 @@
             background: rgba(0, 0, 0, 0.85); color: #fff; padding: 10px 20px;
             border-radius: 20px; font-weight: 700; display: none; z-index: 10000;
             backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: 'Kanit', sans-serif; font-size: 14px;
-            white-space: nowrap;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: 'Kanit', sans-serif; font-size: 14px; white-space: nowrap;
         }
 
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; }
@@ -126,7 +142,7 @@
 
 <div class="container">
     <div class="glass-panel header">
-        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.1.2 Beta</span></h2>
+        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.1.3 Beta</span></h2>
         <div class="action-bar">
             <div id="countdown" style="font-size:11px; font-weight:800; font-variant-numeric: tabular-nums; opacity:0.7;">05:00</div>
             
@@ -142,6 +158,10 @@
     </div>
 
     <div class="refresh-bar"><div id="refreshIndicator"></div></div>
+
+    <div id="urgentTicker" class="urgent-ticker-container" style="display:none;">
+        <div class="urgent-ticker-content" id="tickerContent"></div>
+    </div>
 
     <div class="top-section">
         <div>
@@ -249,17 +269,57 @@
     function renderTable(data) {
         const tbody = document.getElementById("tableBody"); tbody.innerHTML = "";
         const search = document.getElementById("searchInput").value.toLowerCase();
-        let stats = { g: data.length, t:0, p:0, pr:0, c:0 }, csStats = { "Best":0, "Friend":0, "Ball":0, "Ohm":0 };
+        let stats = { g: data.length, t:0, p:0, pr:0, c:0 };
+        // 🟢 Object เก็บสถิติรายบุคคล (t=total, c=closed)
+        let csStats = { "Best":{t:0,c:0}, "Friend":{t:0,c:0}, "Ball":{t:0,c:0}, "Ohm":{t:0,c:0} };
+        
+        // 🚨 ตัวแปรเก็บข้อความ Ticker งานด่วน
+        let urgentText = "";
         
         allTickets.forEach(r => {
-            if(r.status.includes("รอ")) stats.p++; else if(r.status.includes("ดำ")) stats.pr++; else if(r.status.includes("ปิด")) stats.c++;
-            if(!r.status.includes("ปิด")) { stats.t++; if(csStats.hasOwnProperty(r.owner)) csStats[r.owner]++; }
+            const isClosed = r.status.includes("ปิด");
+            
+            // Stats รวม
+            if(r.status.includes("รอ")) stats.p++; else if(r.status.includes("ดำ")) stats.pr++; else if(isClosed) stats.c++;
+            if(!isClosed) stats.t++; 
+            
+            // Stats รายบุคคล (นับงานทั้งหมดที่มอบหมายให้คนนั้น)
+            if(csStats.hasOwnProperty(r.owner)) {
+                csStats[r.owner].t++;
+                if(isClosed) csStats[r.owner].c++;
+            }
+
+            // 🚨 สร้าง Ticker (เฉพาะงาน "1.ด่วนมาก" ที่ยังไม่ "ปิดเคส")
+            if (r.urgent.includes("1") && !isClosed) {
+                urgentText += `🔥 ${r.ticketId} ${r.customer} : ${r.issue} &nbsp;&nbsp;&nbsp;&nbsp; `;
+            }
         });
 
-        document.getElementById('csLeaderboard').innerHTML = Object.entries(csStats).map(([n, c]) => `
+        // 🚨 อัปเดต Ticker UI
+        const tickerContainer = document.getElementById('urgentTicker');
+        const tickerContent = document.getElementById('tickerContent');
+        if (urgentText !== "") {
+            tickerContainer.style.display = 'flex';
+            tickerContent.innerHTML = urgentText;
+        } else {
+            tickerContainer.style.display = 'none';
+        }
+
+        // 🏆 อัปเดต Leaderboard พร้อม Progress Bar
+        document.getElementById('csLeaderboard').innerHTML = Object.entries(csStats).map(([n, s]) => {
+            const percent = s.t === 0 ? 0 : Math.round((s.c / s.t) * 100);
+            return `
             <div class="person-card card-${n.toLowerCase()} ${currentOwnerFilter === n ? 'active-filter' : ''}" onclick="currentOwnerFilter = (currentOwnerFilter === '${n}') ? null : '${n}'; renderTable(allTickets)">
-                <span style="font-weight:800">${n}</span><span style="font-size:24px; font-weight:800">${c}</span>
-            </div>`).join('');
+                <div class="person-card-top">
+                    <span style="font-weight:800">${n}</span>
+                    <span style="font-size:24px; font-weight:800">${s.t}</span>
+                </div>
+                <div>
+                    <div class="perf-bar-bg"><div class="perf-bar-fill" style="width:${percent}%"></div></div>
+                    <div class="perf-text">ปิดงาน ${percent}% (${s.c}/${s.t})</div>
+                </div>
+            </div>`;
+        }).join('');
 
         data.filter(r => {
             const matchStatus = currentQuickFilter==='total-all' ? true : currentQuickFilter==='all' ? !r.status.includes("ปิด") : r.status.includes(currentQuickFilter);
