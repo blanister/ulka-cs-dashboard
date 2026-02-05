@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="tabTitle">ULKA : CS Dashboard v.0.1.1 Beta</title>
+    <title id="tabTitle">ULKA : CS Dashboard v.0.1.2 Beta</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -13,10 +13,13 @@
             --glass: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.18);
             --text: #ffffff;
-            --primary: #ff8c00; 
-            --bg-mesh: radial-gradient(at 0% 0%, hsla(217,100%,15%,1) 0, transparent 55%), 
-                       radial-gradient(at 100% 0%, hsla(33,100%,45%,1) 0, transparent 50%), 
-                       radial-gradient(at 50% 100%, hsla(217,100%,10%,1) 0, transparent 50%);
+            --primary: #ff8c00; /* สีส้ม ULKA ยังอยู่ตรงตัวหนังสือ/ปุ่ม */
+            
+            /* 🔵 ปรับพื้นหลังเป็นโทนน้ำเงินล้วน (Deep Blue Mesh) */
+            --bg-mesh: radial-gradient(at 0% 0%, #003399 0, transparent 50%), 
+                       radial-gradient(at 100% 0%, #002266 0, transparent 50%), 
+                       radial-gradient(at 50% 100%, #001a4d 0, transparent 50%);
+                       
             --font-main: 'Inter', 'Kanit', sans-serif;
         }
 
@@ -29,7 +32,7 @@
 
         body {
             font-family: var(--font-main);
-            background-color: #000d21;
+            background-color: #000d21; /* พื้นหลังน้ำเงินเข้มเกือบดำ */
             background-image: var(--bg-mesh);
             background-attachment: fixed;
             background-size: cover;
@@ -44,7 +47,6 @@
         .container { max-width: 1450px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
         .glass-panel { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
 
-        /* 🟢 Header Adjustment */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; flex-wrap: wrap; gap: 10px; }
         .header h2 { margin: 0; font-size: 22px; color: var(--primary); font-weight: 800; white-space: nowrap; letter-spacing: -0.5px; }
 
@@ -107,20 +109,15 @@
         .field-input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: #fff; font-family: var(--font-main); box-sizing: border-box; font-size: 16px; }
         .field-label { font-size: 13px; font-weight: 600; margin-bottom: 6px; display: block; color: var(--primary); }
 
-        /* 📱 Mobile Specific Layout */
         @media (max-width: 768px) {
             .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .header h2 { font-size: 20px; width: 100%; margin-bottom: 5px; } /* 🟢 ชื่อเต็มบรรทัดแรก */
-            .action-bar { width: 100%; justify-content: space-between; margin-top: 0; } /* 🟢 ปุ่มเครื่องมือบรรทัดสอง เต็มจอ */
-            
+            .header h2 { font-size: 20px; width: 100%; margin-bottom: 5px; }
+            .action-bar { width: 100%; justify-content: space-between; margin-top: 0; }
             .search-container.expanded { width: 100%; position: absolute; left: 15px; right: 15px; top: 60px; z-index: 100; background: #0f1015; border: 1px solid var(--primary); }
-            
             .stats-grid { grid-template-columns: repeat(3, 1fr); }
             #stat-process, #stat-closed { grid-column: span 1; } 
-            
             .top-section { grid-template-columns: 1fr; }
             #chart_div { height: 200px; }
-            
             .modal-content { padding: 20px; margin-top: 20px; margin-bottom: 50px; }
         }
     </style>
@@ -129,7 +126,7 @@
 
 <div class="container">
     <div class="glass-panel header">
-        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.1.1 Beta</span></h2>
+        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.1.2 Beta</span></h2>
         <div class="action-bar">
             <div id="countdown" style="font-size:11px; font-weight:800; font-variant-numeric: tabular-nums; opacity:0.7;">05:00</div>
             
