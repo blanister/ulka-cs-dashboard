@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="tabTitle">ULKA : CS Dashboard v.0.0.5.7</title>
+    <title id="tabTitle">ULKA : CS Dashboard v.0.0.5.8</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
@@ -49,12 +49,10 @@
         .main-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
         @media (min-width: 1000px) { .main-grid { grid-template-columns: 2fr 1.2fr; } }
 
-        /* 🎨 Solid Colorful Leaderboard */
         .leaderboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         @media (min-width: 600px) { .leaderboard-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .person-card { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 18px; border: none; transition: 0.3s; color: white; }
-        
         .card-best { background: #d63031; box-shadow: 0 4px 15px rgba(214, 48, 49, 0.3); }
         .card-friend { background: #0984e3; box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3); }
         .card-ball { background: #e67e22; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
@@ -81,13 +79,17 @@
         th { padding: 12px 8px; text-align: left; font-size: 12px; border-bottom: 2px solid var(--glass-border); color: var(--primary); font-weight: 600; }
         td { padding: 12px 8px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text); vertical-align: top; }
 
+        /* 📋 Copy Feature Styles */
+        .copyable-name { cursor: pointer; color: var(--accent); font-weight: 600; position: relative; padding: 2px 4px; border-radius: 4px; transition: 0.2s; }
+        .copyable-name:active { background: rgba(0,122,255,0.2); transform: scale(0.95); }
+        .copy-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 30px; font-size: 14px; z-index: 10000; display: none; }
+
         .key-highlight { color: var(--danger); font-weight: bold; text-decoration: underline; }
         .badge { padding: 4px 6px; border-radius: 8px; font-size: 10px; font-weight: 600; color: #fff; text-align: center; display: block; }
         .u-vhigh { background: #ff3b30; } .u-medium { background: #ff9500; } .u-low { background: #007aff; }
         .status-closed { background: #34c759; } .status-process { background: #ffcc00; color: #000; } .status-pending { background: #8e8e93; }
 
         .btn-add { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; }
-        
         .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); z-index: 9999; overflow-y: auto; }
         .modal-content { background: var(--glass); margin: 20px auto; padding: 25px; width: 90%; max-width: 600px; border-radius: 25px; border: 1px solid var(--glass-border); }
         input, select, textarea { width:100%; padding:10px; border-radius:10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.2); color: var(--text); font-family: 'Sarabun'; font-size: 16px; box-sizing: border-box; margin-top: 5px; }
@@ -108,7 +110,7 @@
 
 <div class="container">
     <div class="glass-panel header">
-        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.0.5.7</span></h2>
+        <h2>📊 ULKA : CS Dashboard <span style="font-size:10px; opacity:0.5;">v.0.0.5.8 Alpha</span></h2>
         <div style="display: flex; gap: 10px; align-items: center;">
             <div id="countdownText" style="font-size: 12px; font-weight: 600;">05:00</div>
             <button class="btn-add" onclick="openAddModal()">+ เพิ่มเคส</button>
@@ -141,11 +143,13 @@
 
     <div class="glass-panel table-wrap">
         <table>
-            <thead><tr><th>#</th><th>รหัส</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>รุ่น</th><th>ปัญหา</th><th>วิธีแก้ไข</th><th>CS</th><th>ความด่วน</th><th>สถานะ</th><th>รับช่วง</th></tr></thead>
+            <thead><tr><th>#</th><th>รหัส</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า (คลิกเพื่อก๊อป)</th><th>รุ่น</th><th>ปัญหา</th><th>วิธีแก้ไข</th><th>CS</th><th>ความด่วน</th><th>สถานะ</th><th>รับช่วง</th></tr></thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
 </div>
+
+<div id="copyToast" class="copy-toast">คัดลอกชื่อแล้ว! 📋</div>
 
 <div id="addModal" class="modal">
     <div class="modal-content glass-panel">
@@ -161,17 +165,9 @@
                 <div><label>ความด่วน</label><select name="urgency"><option value="1.ด่วนมาก">1.ด่วนมาก</option><option value="2.ปานกลาง">2.ปานกลาง</option><option value="3.ไม่รีบ" selected>3.ไม่รีบ</option></select></div>
                 <div><label>ช่องทาง</label><select name="channel" required><option value="Line OA">Line OA</option><option value="Facebook">Facebook</option><option value="Shopee">Shopee</option><option value="โทร">โทร</option></select></div>
                 <div style="grid-column: span 2;"><label>ชื่อลูกค้า</label><input name="customerName" required placeholder="ระบุชื่อลูกค้า"></div>
-                
                 <div><label>ประเภทสินค้า</label>
                     <select name="type" required>
-                        <option value="ICE">ICE</option>
-                        <option value="COFFEE">COFFEE</option>
-                        <option value="FUME">FUME</option>
-                        <option value="BLENDER">BLENDER</option>
-                        <option value="SODA">SODA</option>
-                        <option value="เครื่องกรองน้ำ">เครื่องกรองน้ำ</option>
-                        <option value="ปั๊มดูดน้ำจากถัง">ปั๊มดูดน้ำจากถัง</option>
-                        <option value="ตู้แช่นม">ตู้แช่นม</option>
+                        <option value="ICE">ICE</option><option value="COFFEE">COFFEE</option><option value="FUME">FUME</option><option value="BLENDER">BLENDER</option><option value="SODA">SODA</option><option value="เครื่องกรองน้ำ">เครื่องกรองน้ำ</option><option value="ปั๊มดูดน้ำจากถัง">ปั๊มดูดน้ำจากถัง</option><option value="ตู้แช่นม">ตู้แช่นม</option>
                     </select>
                 </div>
                 <div><label>รุ่นสินค้า</label>
@@ -180,7 +176,6 @@
                         <option value="12A">12A</option><option value="12B">12B</option><option value="12C">12C</option><option value="15AF">15AF</option><option value="RoG600">RoG600</option><option value="S72C">S72C</option><option value="006C/H">006C/H</option><option value="S9C">S9C</option><option value="07S">07S</option><option value="38F">38F</option><option value="20AF">20AF</option><option value="120F">120F</option><option value="13F-W">13F-W</option><option value="P3B">P3B</option><option value="ProSoda">ProSoda</option><option value="Pro soda max">Pro soda max</option><option value="65S">65S</option><option value="45F">45F</option><option value="ROA4">ROA4</option><option value="U5">U5</option><option value="13F-PS">13F-PS</option><option value="220F">220F</option><option value="700xj">700xj</option><option value="FE 401">FE 401</option><option value="15SA">15SA</option><option value="13F-WB">13F-WB</option><option value="190F">190F</option><option value="20YLR">20YLR</option><option value="Blender">Blender</option><option value="ro-g600">ro-g600</option><option value="M7A">M7A</option><option value="RoA4">RoA4</option><option value="9CN">9CN</option><option value="เครื่องนอกแบรนด์">เครื่องนอกแบรนด์</option>
                     </select>
                 </div>
-
                 <div style="grid-column: span 2;"><label>ปัญหาที่แจ้ง</label><textarea name="issue" rows="2" placeholder="อาการเบื้องต้น"></textarea></div>
                 <div style="grid-column: span 2;"><label>วิธีแก้ไข</label><textarea name="solution" rows="2" placeholder="การดำเนินการล่าสุด"></textarea></div>
             </div>
@@ -196,6 +191,15 @@
     const SHEET_ID = '1yP4soDSWwjomPVP3_udd2m3SZlm5j5XVo32tbKGvwdA';
     const SHEET_GID = '816388223'; 
     let allTickets = [], currentQuickFilter = 'all', currentChannelFilter = 'all';
+
+    // 🟢 ระบบ Copy ชื่อลูกค้า
+    function copyCustomerName(name) {
+        navigator.clipboard.writeText(name).then(() => {
+            const toast = document.getElementById('copyToast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2000);
+        });
+    }
 
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.setAttribute('data-theme', savedTheme);
@@ -281,7 +285,6 @@
         });
 
         const nameClassMap = { "Best": "card-best", "Friend": "card-friend", "Ball": "card-ball", "Ohm": "card-ohm" };
-
         document.getElementById('csLeaderboard').innerHTML = Object.entries(csStats).map(([name, count]) => `
             <div class="person-card ${nameClassMap[name] || ''}">
                 <span class="person-name">${name}</span>
@@ -307,7 +310,7 @@
                 <td style="opacity:0.4">${i+1}</td>
                 <td style="font-weight:600; color:var(--primary)">${r.ticketId}</td>
                 <td>${r.date}</td><td>${r.channel}</td>
-                <td style="font-weight:600">${r.customer}</td>
+                <td><span class="copyable-name" onclick="copyCustomerName('${r.customer}')">${r.customer} 📋</span></td>
                 <td><b>${r.model}</b><br><small style="opacity:0.7">${r.type}</small></td>
                 <td>${highlightedIssue}</td><td style="color:#27ae60">${r.solution}</td>
                 <td>${r.owner}</td>
