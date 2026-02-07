@@ -326,7 +326,13 @@
         
         <div class="nav-group nav-center">
             <button class="nav-btn active" onclick="switchPage('dashboard', this)">
-                Main List
+                OPS101
+            </button>
+            <button class="nav-btn" onclick="switchPage('crm', this)">
+                CRM201
+            </button>
+            <button class="nav-btn" onclick="switchPage('tec', this)">
+                TEC301
             </button>
             <button class="nav-btn" onclick="switchPage('summary', this)">
                 CS Summary
@@ -410,6 +416,30 @@
                             </thead>
                             <tbody id="tableBody"></tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="view-crm" class="page-view">
+                <div class="page-header">
+                    <h2>CRM201</h2>
+                </div>
+                <div class="compact-wrapper" style="display:flex; justify-content:center; align-items:center; height:300px; color:var(--text-secondary);">
+                    <div style="text-align:center;">
+                        <div style="font-size:40px; margin-bottom:10px;">🚧</div>
+                        <div>Waiting for data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-tec" class="page-view">
+                <div class="page-header">
+                    <h2>TEC301</h2>
+                </div>
+                <div class="compact-wrapper" style="display:flex; justify-content:center; align-items:center; height:300px; color:var(--text-secondary);">
+                    <div style="text-align:center;">
+                        <div style="font-size:40px; margin-bottom:10px;">🛠️</div>
+                        <div>Waiting for data...</div>
                     </div>
                 </div>
             </div>
@@ -498,7 +528,12 @@
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
         
-        const titles = {'dashboard': 'Main List', 'summary': 'Analytics Summary'};
+        const titles = {
+            'dashboard': 'OPS101', 
+            'crm': 'CRM201', 
+            'tec': 'TEC301', 
+            'summary': 'Analytics Summary'
+        };
         // Only update inner page title if element exists (Summary still has one)
         const titleEl = document.getElementById('pageTitle');
         if(titleEl) titleEl.innerText = titles[pageId];
