@@ -3,557 +3,595 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="tabTitle">ULKA : CS Dashboard v.0.3.5 Beta</title>
+    <title>ULKA : CS Dashboard v.0.4.3</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Kanit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
     <style>
-        /* 🟢 THEME VARIABLES SYSTEM */
+        /* 🎨 THEME VARIABLES SYSTEM */
         :root {
-            /* Dark Mode (Default) */
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --text: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --primary: #ff8c00; 
-            --bg-mesh: radial-gradient(at 0% 0%, #003399 0, transparent 50%), 
-                       radial-gradient(at 100% 0%, #002266 0, transparent 50%), 
-                       radial-gradient(at 50% 100%, #001a4d 0, transparent 50%);
-            --bg-color: #000d21;
-            --input-bg: rgba(0, 0, 0, 0.3);
-            --input-border: var(--glass-border);
-            --card-shadow: 0 12px 40px rgba(0,0,0,0.4);
-            --table-border: rgba(255,255,255,0.08);
+            /* 🌑 Dark Mode (Default) */
+            --bg-body: #0f172a;
+            --bg-mesh: radial-gradient(at 0% 0%, #1e3a8a 0px, transparent 50%), 
+                       radial-gradient(at 100% 0%, #1e1b4b 0px, transparent 50%), 
+                       radial-gradient(at 100% 100%, #172554 0px, transparent 50%);
+            
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --primary-color: #f97316; /* Orange-500 */
+            --primary-glow: rgba(249, 115, 22, 0.4);
+
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6; /* Blue for Assigned */
+
             --font-main: 'Inter', 'Kanit', sans-serif;
-            --ticker-bg: rgba(220, 53, 69, 0.15);
-            --ticker-text: #ff6b6b;
+            --radius-md: 16px;
+            --radius-lg: 24px;
         }
 
         [data-theme="light"] {
-            /* 🟠 Light Mode (Orange Theme) */
-            --glass: rgba(255, 255, 255, 0.92); 
-            --glass-border: rgba(255, 140, 0, 0.15); 
-            --text: #2c1a0b; 
-            --text-muted: #6b4e3d; 
-            --primary: #ea580c; 
-            --bg-mesh: radial-gradient(at 0% 0%, #fff7ed 0, transparent 50%), 
-                       radial-gradient(at 100% 0%, #ffedd5 0, transparent 50%), 
-                       radial-gradient(at 50% 100%, #fed7aa 0, transparent 50%);
-            --bg-color: #fff7ed;
-            --input-bg: #ffffff; 
-            --input-border: #fed7aa; 
-            --card-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15), 0 8px 10px -6px rgba(234, 88, 12, 0.1);
-            --table-border: #fed7aa;
-            --ticker-bg: #fee2e2;
-            --ticker-text: #dc2626;
+            /* ☀️ Light Mode */
+            --bg-body: #f8fafc; /* Slate-50 */
+            --bg-mesh: radial-gradient(at 0% 0%, #fff7ed 0px, transparent 50%), 
+                       radial-gradient(at 100% 0%, #ffedd5 0px, transparent 50%);
+            
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            
+            --text-main: #1e293b; /* Slate-800 */
+            --text-secondary: #64748b; /* Slate-500 */
+            --primary-color: #ea580c; /* Orange-600 */
+            --primary-glow: rgba(234, 88, 12, 0.2);
         }
 
+        * { box-sizing: border-box; }
+        
         body {
             font-family: var(--font-main);
-            background-color: var(--bg-color);
+            background-color: var(--bg-body);
             background-image: var(--bg-mesh);
             background-attachment: fixed;
             background-size: cover;
-            margin: 0; padding: 10px;
-            color: var(--text);
+            margin: 0; padding: 20px;
+            color: var(--text-main);
             min-height: 100vh;
-            transition: 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
             -webkit-font-smoothing: antialiased;
+            font-size: 14px;
         }
 
-        .container { max-width: 1450px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-        .glass-panel { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; box-shadow: var(--card-shadow); }
-
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; flex-wrap: wrap; gap: 10px; }
-        .header h2 { margin: 0; font-size: 20px; color: var(--primary); font-weight: 800; white-space: nowrap; letter-spacing: -0.5px; }
-
-        .action-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .icon-btn { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); cursor: pointer; color: var(--text); font-weight: 800; transition: 0.2s; flex-shrink: 0; }
-        .icon-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-        /* 🟢 REFRESH BAR */
-        .refresh-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.1); margin-top: -8px; border-radius: 10px; overflow: hidden; }
-        #refreshIndicator { height: 100%; background: var(--primary); width: 0%; transition: width 1s linear; }
-
-        /* Control Bar (Inline Middle) */
-        .control-bar-inline { 
-            display: flex; gap: 10px; align-items: flex-end; padding: 15px; flex-wrap: wrap;
-            background: var(--glass); border-radius: 16px; border: 1px solid var(--glass-border);
-            margin-top: 10px; 
+        /* 📱 Container & Layout */
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
         }
 
-        .filter-group { display: flex; flex-direction: column; gap: 4px; flex: 1 1 auto; min-width: 120px; }
-        .filter-label { font-size: 11px; font-weight: 600; opacity: 0.8; margin-left: 2px; color: var(--text); }
-        .filter-select {
-            background: var(--input-bg); border: 1px solid var(--input-border); 
-            color: var(--text); padding: 6px 10px; border-radius: 10px; 
-            font-family: var(--font-main); outline: none; cursor: pointer;
-            height: 36px; width: 100%; font-size: 13px; box-sizing: border-box;
-            transition: 0.2s;
+        /* 💎 Glass Card Style */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .filter-select option { background: var(--input-bg); color: var(--text); }
 
-        .toggle-wrapper { 
-            display: flex; align-items: center; gap: 8px; 
-            background: var(--input-bg); padding: 0 12px; border-radius: 10px; border: 1px solid var(--input-border); 
-            cursor: pointer; height: 36px; box-sizing: border-box; flex: 0 0 auto;
+        /* 🔝 Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        .toggle-checkbox { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
-        .toggle-text { font-size: 12px; font-weight: 600; color: var(--text); user-select: none; }
-
-        .btn-reset { background: rgba(100, 100, 100, 0.1); border: 1px solid var(--glass-border); color: var(--text); border-radius:10px; padding: 0 15px; height:36px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:5px; flex: 0 0 auto; }
-        .btn-reset:hover { background: rgba(100, 100, 100, 0.2); }
-        .btn-export { background: #27ae60; color:#fff; border:none; border-radius:10px; padding: 0 15px; height:36px; cursor:pointer; font-size:13px; font-weight:700; display:flex; align-items:center; gap:5px; flex: 0 0 auto; }
-
-        .search-container { display: flex; align-items: center; background: var(--input-bg); border-radius: 20px; border: 1px solid var(--glass-border); overflow: hidden; width: 0; transition: width 0.3s ease; }
-        .search-container.expanded { width: 140px; padding: 0 10px; }
-        .search-container input { border: none; background: transparent; padding: 8px; color: var(--text); outline: none; width: 100%; font-family: var(--font-main); font-size: 14px; }
-
-        .top-section { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 5px; }
-        @media (min-width: 1100px) { .top-section { grid-template-columns: 1.8fr 1.2fr; } }
-
-        .leaderboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 8px; }
-        @media (min-width: 600px) { .leaderboard-grid { grid-template-columns: repeat(5, 1fr); } }
         
-        .person-card { padding: 12px 15px; display: flex; flex-direction: column; justify-content: space-between; border-radius: 16px; color: white; cursor: pointer; border: 2px solid transparent; transition: 0.3s; min-height: 80px; position: relative; overflow: hidden; }
-        .person-card-top { display: flex; justify-content: space-between; align-items: center; width: 100%; z-index: 2; }
-        .person-card:active { transform: scale(0.98); }
-        
-        .card-all { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
-        .card-best { background: linear-gradient(135deg, #d63031, #ff4757); } 
-        .card-friend { background: linear-gradient(135deg, #0984e3, #2e86de); } 
-        .card-ball { background: linear-gradient(135deg, #e67e22, #f39c12); } 
-        .card-ohm { background: linear-gradient(135deg, #f1c40f, #ff9f43); color: #000; }
+        .header-title { display: flex; flex-direction: column; }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--text-main); letter-spacing: -0.5px; }
+        .header-meta { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
 
-        .perf-bar-bg { width: 100%; height: 4px; background: rgba(0,0,0,0.2); border-radius: 4px; margin-top: 8px; overflow: hidden; z-index: 2; position: relative; }
-        .perf-bar-fill { height: 100%; background: #fff; border-radius: 4px; transition: width 0.5s ease; opacity: 0.9; }
-        .perf-text { font-size: 10px; margin-top: 4px; opacity: 0.8; font-weight: 600; text-align: right; z-index: 2; position: relative; }
-
-        .urgent-ticker-container { 
-            width: 100%; overflow: hidden; white-space: nowrap; 
-            background: var(--ticker-bg); border: 1px solid var(--ticker-text); 
-            border-radius: 12px; margin-bottom: 10px; 
-            display: none; position: relative; height: 36px; align-items: center;
-            z-index: 10;
+        /* 🛠 Action Buttons */
+        .action-group { display: flex; gap: 10px; align-items: center; }
+        .btn-icon {
+            width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--card-border);
+            background: var(--card-bg); color: var(--text-main); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s; font-size: 18px;
         }
-        .urgent-ticker-content { 
-            display: inline-block; padding-left: 100%; 
-            animation: ticker 25s linear infinite; 
-            font-size: 13px; font-weight: 700; 
-            color: var(--ticker-text); font-family: 'Kanit'; 
+        .btn-icon:hover { background: var(--card-border); transform: translateY(-2px); }
+        .btn-icon.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+
+        .btn-primary {
+            background: var(--primary-color); color: white; border: none; padding: 0 20px; height: 42px;
+            border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px var(--primary-glow);
+            transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-family: var(--font-main);
         }
-        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-        @media (min-width: 600px) { .stats-grid { grid-template-columns: repeat(5, 1fr); } }
-        
-        .stat-card { padding: 12px 5px; text-align: center; cursor: pointer; border: 1px solid var(--glass-border); border-radius: 16px; background: var(--glass); }
-        .stat-card h3 { font-size: 10px; font-weight: 700; margin: 0; opacity: 0.8; text-transform: uppercase; color: var(--text); }
-        .stat-card .value { font-size: 24px; font-weight: 800; color: var(--primary); margin-top: 2px; }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-        .table-wrap { padding: 15px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-        table { width: 1300px; border-collapse: collapse; } 
-        @media (min-width: 1300px) { table { width: 100%; table-layout: fixed; } }
-        th { padding: 12px 10px; text-align: left; font-size: 13px; border-bottom: 2px solid var(--glass-border); color: var(--primary); font-weight: 800; }
-        td { padding: 12px 10px; border-bottom: 1px solid var(--table-border); vertical-align: top; font-size: 14px; color: var(--text); }
-        td b { color: var(--text); }
-        td small { color: var(--text-muted); }
+        /* 🔍 Search Bar */
+        .search-box {
+            position: relative; height: 42px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 42px; overflow: hidden; border-radius: 21px; background: var(--card-bg); border: 1px solid var(--card-border);
+        }
+        .search-box.expanded { width: 200px; }
+        .search-box input {
+            width: 100%; height: 100%; background: transparent; border: none; padding: 0 15px 0 45px;
+            color: var(--text-main); font-family: var(--font-main); outline: none;
+        }
+        .search-icon-toggle {
+            position: absolute; left: 0; top: 0; width: 42px; height: 42px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2;
+        }
 
-        .customer-name { color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline dotted; }
+        /* 📊 Dashboard Grid */
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .leaderboard-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
         
-        .badge { padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; color: #fff; display: inline-block; white-space: nowrap; }
-        .u-vhigh { background: #ff3b30; } .u-medium { background: #ff9500; } .u-low { background: #007aff; }
-        .status-closed { background: #34c759; } .status-process { background: #f1c40f; color: #000; } .status-pending { background: #8e8e93; }
+        .lb-card {
+            padding: 16px; border-radius: var(--radius-md); position: relative; overflow: hidden;
+            cursor: pointer; transition: transform 0.2s; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        .lb-card:hover { transform: translateY(-3px); }
+        .lb-card h3 { font-size: 11px; margin: 0; opacity: 0.9; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .lb-card .count { font-size: 28px; font-weight: 800; margin: 4px 0 8px 0; line-height: 1; }
+        
+        .bg-gradient-all { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .bg-gradient-1 { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+        .bg-gradient-2 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .bg-gradient-3 { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .bg-gradient-4 { background: linear-gradient(135deg, #eab308, #d97706); color: #1e293b; }
 
-        .copy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.85); color: #fff; padding: 10px 20px; border-radius: 20px; font-weight: 700; display: none; z-index: 10000; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: 'Kanit', sans-serif; font-size: 14px; white-space: nowrap; }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); z-index: 9999; padding: 20px; box-sizing: border-box; overflow-y: auto; }
-        .modal-content { background: var(--bg-color); border: 1px solid var(--glass-border); margin: auto; padding: 25px; width: 100%; max-width: 550px; border-radius: 25px; color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
-        .field-input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); font-family: var(--font-main); box-sizing: border-box; font-size: 16px; outline: none; }
+        .progress-track { background: rgba(255,255,255,0.2); height: 4px; border-radius: 2px; width: 100%; }
+        .progress-fill { background: white; height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+        .progress-label { font-size: 10px; font-weight: 600; margin-top: 4px; opacity: 0.9; text-align: right; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+        .stat-item {
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md);
+            padding: 15px; text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+        .stat-item:hover { background: var(--card-border); }
+        .stat-item h4 { margin: 0; font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; }
+        .stat-item .val { font-size: 24px; font-weight: 700; color: var(--text-main); margin-top: 5px; }
+
+        /* 🎛 Controls */
+        .controls-area {
+            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md);
+            padding: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+        }
+        .input-group { flex: 1; min-width: 140px; }
+        .input-label { display: block; font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
+        .form-select, .form-input {
+            width: 100%; height: 40px; padding: 0 12px; border-radius: 10px;
+            border: 1px solid var(--card-border); background: rgba(255,255,255,0.05);
+            color: var(--text-main); font-family: var(--font-main); font-size: 13px; outline: none; transition: 0.2s;
+        }
+        [data-theme="light"] .form-select, [data-theme="light"] .form-input { background: #f1f5f9; }
+        .form-select:focus, .form-input:focus { border-color: var(--primary-color); }
+
+        .btn-outline {
+            height: 40px; padding: 0 16px; border: 1px solid var(--card-border); background: transparent;
+            color: var(--text-secondary); border-radius: 10px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-outline:hover { color: var(--text-main); background: var(--card-border); }
+
+        .chart-container { width: 100%; height: 100%; min-height: 300px; position: relative; }
+        .table-container { overflow-x: auto; border-radius: var(--radius-lg); }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th { 
+            text-align: left; padding: 16px; font-size: 12px; color: var(--text-secondary); 
+            text-transform: uppercase; font-weight: 600; border-bottom: 1px solid var(--card-border);
+        }
+        td { 
+            padding: 16px; border-bottom: 1px solid var(--card-border);
+            color: var(--text-main); vertical-align: top;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        [data-theme="light"] tr:hover td { background: rgba(0,0,0,0.02); }
+
+        /* 🌈 Status Badges (Updated) */
+        .status-badge {
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; 
+            display: inline-flex; align-items: center; gap: 4px;
+        }
         
+        /* Green */
+        .status-closed { 
+            background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.2); 
+        }
+        /* Orange/Yellow */
+        .status-doing { 
+            background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2); 
+        }
+        /* Grey */
+        .status-pending { 
+            background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2); 
+        }
+        /* Blue (New!) */
+        .status-assigned { 
+            background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); 
+        }
+
+        .urgent-badge { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+
+        .click-to-copy { cursor: pointer; text-decoration: underline dotted; transition: color 0.2s; }
+        .click-to-copy:hover { color: var(--primary-color); }
+        .click-to-copy:active { transform: scale(0.98); }
+
+        .copy-toast { 
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); 
+            background: rgba(0, 0, 0, 0.85); color: #fff; padding: 10px 20px; 
+            border-radius: 20px; font-weight: 700; display: none; z-index: 10000; 
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: 'Kanit', sans-serif; 
+            font-size: 14px; pointer-events: none;
+        }
+
+        /* 🚨 Ticker */
+        .ticker-wrap {
+            width: 100%; overflow: hidden; height: 32px; background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; margin-bottom: 16px;
+            display: flex; align-items: center;
+        }
+        .ticker-content {
+            white-space: nowrap; padding-left: 100%; display: inline-block;
+            animation: ticker 30s linear infinite; color: var(--danger); font-weight: 600; font-size: 13px;
+        }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .leaderboard-row, .stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
         @media (max-width: 768px) {
-            .header { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .header h2 { font-size: 20px; width: 100%; margin-bottom: 5px; }
-            .action-bar { width: 100%; justify-content: space-between; margin-top: 0; }
-            .search-container.expanded { width: 100%; position: absolute; left: 15px; right: 15px; top: 100px; z-index: 100; background: var(--bg-color); border: 1px solid var(--primary); }
-            .stats-grid { grid-template-columns: repeat(3, 1fr); }
-            #stat-process, #stat-closed { grid-column: span 1; } 
-            .top-section { grid-template-columns: 1fr; }
-            #chart_div { height: 200px; }
-            .modal-content { padding: 20px; margin-top: 20px; margin-bottom: 50px; }
-            .leaderboard-grid .card-all { grid-column: span 2; }
-            .control-bar-inline { flex-direction: row; align-items: flex-end; gap: 8px; }
-            .filter-group { width: 48%; min-width: auto; }
-            .toggle-wrapper { width: 100%; justify-content: center; margin-top: 5px; }
-            .btn-reset, .btn-export { width: 48%; justify-content: center; }
+            .header { flex-direction: column; align-items: flex-start; }
+            .action-group { width: 100%; justify-content: space-between; margin-top: 10px; }
+            .search-box.expanded { width: 100%; position: absolute; left: 0; right: 0; top: 70px; z-index: 10; padding: 0 10px; }
+            .leaderboard-row { grid-template-columns: 1fr 1fr; }
+            .card-all { grid-column: span 2; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+            .chart-container { min-height: 250px; }
+            .controls-area { flex-direction: column; align-items: stretch; }
+            .btn-outline, .btn-primary { width: 100%; justify-content: center; }
+        }
+
+        .loading-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--primary-color); width: 0%; z-index: 9999; transition: width 0.5s linear; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+            z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.open { display: flex; opacity: 1; }
+        .modal-box {
+            background: var(--bg-body); border: 1px solid var(--card-border); width: 90%; max-width: 500px;
+            border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--card-shadow); max-height: 90vh; overflow-y: auto;
         }
     </style>
 </head>
 <body>
 
+<div class="loading-bar" id="refreshBar"></div>
+<div id="copyToast" class="copy-toast">คัดลอกชื่อลูกค้าแล้ว! 📋</div>
+
 <div class="container">
-    <div class="glass-panel header">
-        <h2>ULKA : CS Dashboard <span id="countdown" style="font-size:10px; opacity:0.5;">v.0.3.5 Beta | 05:00</span></h2>
-        <div class="action-bar">
-            <div class="search-container" id="searchWrap"><input type="text" id="searchInput" placeholder="ค้นหา..." onkeyup="renderTable()"></div>
-            <div class="icon-btn" onclick="toggleSearch()">🔍</div>
-            <div class="icon-btn" id="btnLine" onclick="toggleChannelFilter('Line OA', this)">L</div>
-            <div class="icon-btn" id="btnFb" onclick="toggleChannelFilter('Facebook', this)">f</div>
-            <button style="background:var(--primary); color:#fff; border:none; padding:8px 15px; border-radius:12px; font-weight:800; cursor:pointer; font-family:var(--font-main); font-size:13px;" onclick="openAddModal()">+ เพิ่ม</button>
-            <button onclick="toggleTheme()" class="icon-btn" id="themeBtn">☀</button>
+    
+    <header class="glass-card header">
+        <div class="header-title">
+            <h1>CS Dashboard</h1>
+            <span class="header-meta" id="countdown">v.0.4.3 • Updated just now</span>
         </div>
+        
+        <div class="action-group">
+            <div class="search-box" id="searchBox">
+                <div class="search-icon-toggle" onclick="toggleSearch()">🔍</div>
+                <input type="text" id="searchInput" placeholder="ค้นหาลูกค้า, รุ่นสินค้า..." onkeyup="renderTable()">
+            </div>
+            
+            <button class="btn-icon" id="btnLine" onclick="toggleChannel('Line OA', this)">L</button>
+            <button class="btn-icon" id="btnFb" onclick="toggleChannel('Facebook', this)">F</button>
+            <button class="btn-icon" onclick="toggleTheme()">🌓</button>
+            <button class="btn-primary" onclick="openModal()"><span>+ เคสใหม่</span></button>
+        </div>
+    </header>
+
+    <div id="urgentTicker" class="ticker-wrap" style="display:none;">
+        <div class="ticker-content" id="tickerContent"></div>
     </div>
 
-    <div class="refresh-bar"><div id="refreshIndicator"></div></div>
+    <div class="dashboard-grid">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <div class="leaderboard-row" id="leaderboard"></div>
 
-    <div id="urgentTicker" class="urgent-ticker-container">
-        <div class="urgent-ticker-content" id="tickerContent"></div>
-    </div>
-
-    <div class="top-section">
-        <div> <div class="leaderboard-grid" id="csLeaderboard"></div>
-            <div class="stats-grid">
-                <div class="glass-panel stat-card" onclick="shortcutFilter('total-all')"><h3>ทั้งหมด</h3><div class="value" id="grandTotalCases">0</div></div>
-                <div class="glass-panel stat-card" onclick="shortcutFilter('all')"><h3>งานค้าง</h3><div class="value" id="totalTickets">0</div></div>
-                <div class="glass-panel stat-card" onclick="shortcutFilter('รอดำเนินการ')"><h3>รอ</h3><div class="value" id="pendingTickets">0</div></div>
-                <div class="glass-panel stat-card" onclick="shortcutFilter('กำลังดำเนินการ')"><h3>ทำ</h3><div class="value" id="processTickets">0</div></div>
-                <div class="glass-panel stat-card" onclick="shortcutFilter('ปิดเคส')"><h3>ปิด</h3><div class="value" id="closedTickets">0</div></div>
+            <div class="stats-row">
+                <div class="stat-item" onclick="filterStatus('total-all')"><h4>ทั้งหมด</h4><div class="val" id="val-total">0</div></div>
+                <div class="stat-item" onclick="filterStatus('all')"><h4>งานค้าง</h4><div class="val" id="val-active" style="color:var(--primary-color)">0</div></div>
+                <div class="stat-item" onclick="filterStatus('รอดำเนินการ')"><h4>รอ</h4><div class="val" id="val-pending">0</div></div>
+                <div class="stat-item" onclick="filterStatus('กำลังดำเนินการ')"><h4>ทำ</h4><div class="val" id="val-doing">0</div></div>
+                <div class="stat-item" onclick="filterStatus('ปิดเคส')"><h4>ปิด</h4><div class="val" id="val-closed" style="color:var(--success)">0</div></div>
             </div>
 
-            <div class="glass-panel control-bar-inline">
-                <div class="filter-group">
-                    <span class="filter-label">📆 วันที่ / เดือน</span>
-                    <input type="date" id="dateFilter" class="filter-select" onchange="renderTable()">
+            <div class="controls-area">
+                <div class="input-group">
+                    <label class="input-label">📅 วันที่</label>
+                    <input type="date" id="dateFilter" class="form-input" onchange="renderTable()">
                 </div>
-                <div class="toggle-wrapper" onclick="toggleWholeMonth()">
-                    <input type="checkbox" id="wholeMonthToggle" class="toggle-checkbox">
-                    <span class="toggle-text">ดูเหมาทั้งเดือน</span>
+                <div class="input-group" style="flex:0.5; display:flex; align-items:flex-end;">
+                     <label style="cursor:pointer; display:flex; align-items:center; gap:8px; height:40px;">
+                        <input type="checkbox" id="monthToggle" onchange="renderTable()">
+                        <span style="font-size:13px; font-weight:500;">ทั้งเดือน</span>
+                     </label>
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">⚡ สถานะงาน</span>
-                    <select id="statusFilter" class="filter-select" onchange="renderTable()">
-                        <option value="total-all">ทั้งหมด (Total)</option>
+                <div class="input-group">
+                    <label class="input-label">⚡ สถานะ</label>
+                    <select id="statusFilter" class="form-select" onchange="renderTable()">
+                        <option value="total-all">ทั้งหมด</option>
                         <option value="all" selected>งานค้าง (Active)</option>
-                        <option value="รอดำเนินการ">รอดำเนินการ (Pending)</option>
-                        <option value="กำลังดำเนินการ">กำลังดำเนินการ (Doing)</option>
-                        <option value="ปิดเคส">ปิดเคส (Closed)</option>
+                        <option value="รอดำเนินการ">รอดำเนินการ</option>
+                        <option value="กำลังดำเนินการ">กำลังดำเนินการ (รวมมอบหมาย)</option>
+                        <option value="ปิดเคส">ปิดเคส</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <span class="filter-label">👤 ทีมงาน</span>
-                    <select id="csFilter" class="filter-select" onchange="renderTable()">
-                        <option value="all">ทีมรวม (All Team)</option>
+                <div class="input-group">
+                    <label class="input-label">👤 ทีมงาน</label>
+                    <select id="csFilter" class="form-select" onchange="renderTable()">
+                        <option value="all">ทีมรวม</option>
                         <option value="Best">Best</option>
                         <option value="Friend">Friend</option>
                         <option value="Ball">Ball</option>
                         <option value="Ohm">Ohm</option>
                     </select>
                 </div>
-                <button class="btn-reset" onclick="resetFilters()">↺ รีเซ็ต</button>
-                <button class="btn-export" onclick="exportToCSV()">📥 Export</button>
+                <button class="btn-outline" onclick="resetFilters()">↺ รีเซ็ต</button>
+                <button class="btn-outline" onclick="exportCSV()">📥 Export</button>
             </div>
-            
         </div>
-        <div class="glass-panel" style="padding:10px;"><div id="chart_div" style="height:250px;"></div></div> </div>
 
-    <div class="glass-panel table-wrap">
+        <div class="glass-card" style="padding: 20px; display:flex; flex-direction:column;">
+            <h3 style="margin:0 0 15px 0; font-size:14px; color:var(--text-secondary);">🏆 Top 10 Models</h3>
+            <div id="chart_div" class="chart-container"></div>
+        </div>
+    </div>
+
+    <div class="glass-card table-container">
         <table id="mainTable">
-            <thead><tr><th>#</th><th>รหัส</th><th>วันที่</th><th>ลูกค้า</th><th>รุ่น / ประเภท</th><th>ปัญหา</th><th>วิธีแก้</th><th>CS</th><th>ด่วน</th><th>สถานะ</th><th>ผู้รับช่วง</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>#</th><th>Ticket</th><th>Date</th><th>Customer</th><th>Model / Type</th>
+                    <th>Issue</th><th>Solution</th><th>Owner</th><th>Urgency</th><th>Status</th>
+                </tr>
+            </thead>
             <tbody id="tableBody"></tbody>
         </table>
     </div>
 </div>
 
-<div id="addModal" class="modal">
-    <div class="modal-content">
-        <h2 style="margin-top:0; color:var(--primary); font-weight:800;">📂 บันทึกเคสใหม่</h2>
-        <form id="ticketForm">
-            <label class="field-label">พนักงานผู้รับผิดชอบ</label>
-            <select name="owner" id="ownerSelect" class="field-input" required><option value="Best">Best</option><option value="Friend">Friend</option><option value="Ball">Ball</option><option value="Ohm">Ohm</option></select>
-            <label class="field-label">ชื่อลูกค้า</label><input name="customerName" class="field-input" required placeholder="ชื่อลูกค้า...">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div><label class="field-label">ประเภทสินค้า</label><select name="type" class="field-input" required><option value="ICE">ICE</option><option value="COFFEE">COFFEE</option><option value="FUME">FUME</option><option value="BLENDER">BLENDER</option><option value="SODA">SODA</option><option value="เครื่องกรองน้ำ">เครื่องกรองน้ำ</option><option value="ปั๊มดูดน้ำจากถัง">ปั๊มดูดน้ำจากถัง</option><option value="ตู้แช่นม">ตู้แช่นม</option></select></div>
-                <div><label class="field-label">รุ่นสินค้า</label><select name="model" class="field-input" required>
-                    <option value="">-- เลือกรุ่น --</option>
-                    <option value="12A">12A</option><option value="12B">12B</option><option value="12C">12C</option><option value="15AF">15AF</option><option value="RoG600">RoG600</option><option value="S72C">S72C</option><option value="006C/H">006C/H</option><option value="S9C">S9C</option><option value="07S">07S</option><option value="38F">38F</option><option value="20AF">20AF</option><option value="120F">120F</option><option value="13F-W">13F-W</option><option value="P3B">P3B</option><option value="ProSoda">ProSoda</option><option value="Pro soda max">Pro soda max</option><option value="65S">65S</option><option value="45F">45F</option><option value="ROA4">ROA4</option><option value="U5">U5</option><option value="13F-PS">13F-PS</option><option value="220F">220F</option><option value="700xj">700xj</option><option value="FE 401">FE 401</option><option value="15SA">15SA</option><option value="13F-WB">13F-WB</option><option value="190F">190F</option><option value="20YLR">20YLR</option><option value="Blender">Blender</option><option value="ro-g600">ro-g600</option><option value="M7A">M7A</option><option value="RoA4">RoA4</option><option value="9CN">9CN</option><option value="เครื่องนอกแบรนด์">เครื่องนอกแบรนด์</option>
+<div class="modal-overlay" id="addModal">
+    <div class="modal-box">
+        <h2 style="margin-top:0;">📂 เปิดเคสใหม่</h2>
+        <form id="ticketForm" style="display:flex; flex-direction:column; gap:15px;">
+            <div><label class="input-label">ผู้รับผิดชอบ</label>
+            <select name="owner" class="form-select" required><option value="Best">Best</option><option value="Friend">Friend</option><option value="Ball">Ball</option><option value="Ohm">Ohm</option></select></div>
+            <div><label class="input-label">ลูกค้า</label><input name="customerName" class="form-input" required placeholder="ชื่อลูกค้า..."></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div><label class="input-label">ประเภท</label><select name="type" class="form-select"><option value="ICE">ICE</option><option value="COFFEE">COFFEE</option><option value="FUME">FUME</option><option value="BLENDER">BLENDER</option><option value="SODA">SODA</option><option value="เครื่องกรองน้ำ">เครื่องกรองน้ำ</option><option value="ปั๊มดูดน้ำจากถัง">ปั๊มดูดน้ำจากถัง</option><option value="ตู้แช่นม">ตู้แช่นม</option></select></div>
+                <div><label class="input-label">รุ่น</label><select name="model" class="form-select">
+                    <option value="">-- เลือกรุ่น --</option><option value="12A">12A</option><option value="12B">12B</option><option value="12C">12C</option><option value="15AF">15AF</option><option value="RoG600">RoG600</option><option value="S72C">S72C</option><option value="006C/H">006C/H</option><option value="S9C">S9C</option><option value="07S">07S</option><option value="38F">38F</option><option value="20AF">20AF</option><option value="120F">120F</option><option value="13F-W">13F-W</option><option value="P3B">P3B</option><option value="ProSoda">ProSoda</option><option value="Pro soda max">Pro soda max</option><option value="65S">65S</option><option value="45F">45F</option><option value="ROA4">ROA4</option><option value="U5">U5</option><option value="13F-PS">13F-PS</option><option value="220F">220F</option><option value="700xj">700xj</option><option value="FE 401">FE 401</option><option value="15SA">15SA</option><option value="13F-WB">13F-WB</option><option value="190F">190F</option><option value="20YLR">20YLR</option><option value="Blender">Blender</option><option value="ro-g600">ro-g600</option><option value="M7A">M7A</option><option value="RoA4">RoA4</option><option value="9CN">9CN</option><option value="เครื่องนอกแบรนด์">เครื่องนอกแบรนด์</option>
                 </select></div>
             </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div><label class="field-label">ความเร่งด่วน</label><select name="urgency" class="field-input"><option value="1.ด่วนมาก">1.ด่วนมาก</option><option value="2.ปานกลาง">2.ปานกลาง</option><option value="3.ไม่รีบ" selected>3.ไม่รีบ</option></select></div>
-                <div><label class="field-label">ช่องทาง</label><select name="channel" class="field-input"><option value="Line OA">Line OA</option><option value="Facebook">Facebook</option><option value="Shopee">Shopee</option><option value="โทร">โทร</option></select></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div><label class="input-label">ความด่วน</label><select name="urgency" class="form-select"><option value="3.ไม่รีบ">ปกติ</option><option value="2.ปานกลาง">ปานกลาง</option><option value="1.ด่วนมาก">🔥 ด่วนมาก</option></select></div>
+                <div><label class="input-label">ช่องทาง</label><select name="channel" class="form-select"><option value="Line OA">Line OA</option><option value="Facebook">Facebook</option><option value="Shopee">Shopee</option><option value="โทร">โทร</option></select></div>
             </div>
-            <label class="field-label">ปัญหาที่พบ</label><textarea name="issue" class="field-input" rows="2" placeholder="ระบุอาการเสีย..."></textarea>
-            <label class="field-label">วิธีแก้ปัญหา</label><textarea name="solution" class="field-input" rows="2" placeholder="ระบุวิธีจัดการ..."></textarea>
-            
-            <button type="submit" id="submitBtn" style="width:100%; background:var(--primary); color:#fff; border:none; padding:16px; border-radius:15px; font-weight:800; cursor:pointer;">💾 บันทึกข้อมูล</button>
-            <button type="button" onclick="document.getElementById('addModal').style.display='none'" style="width:100%; background:none; border:none; color:var(--text); margin-top:10px; opacity:0.5; cursor:pointer;">ยกเลิก</button>
+            <div><label class="input-label">อาการเสีย</label><textarea name="issue" class="form-input" style="height:80px; padding-top:10px;"></textarea></div>
+            <div><label class="input-label">การแก้ไข</label><textarea name="solution" class="form-input" style="height:60px; padding-top:10px;"></textarea></div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button type="submit" class="btn-primary" style="flex:1; justify-content:center;">บันทึก</button>
+                <button type="button" class="btn-outline" style="flex:1; justify-content:center;" onclick="closeModal()">ยกเลิก</button>
+            </div>
         </form>
     </div>
 </div>
 
-<div id="copyToast" class="copy-toast">คัดลอกชื่อลูกค้าแล้ว! 📋</div>
-
 <script>
     google.charts.load('current', {'packages':['corechart']});
     const SHEET_ID = '1yP4soDSWwjomPVP3_udd2m3SZlm5j5XVo32tbKGvwdA', SHEET_GID = '816388223';
-    let countdown = 300, allTickets = [], currentChannelFilter = 'all';
-    let filteredExportData = []; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzDRJpLUw51hZi3WI6Su7_LgeXz0GG-bK4CtfGygkmbfne2dMdtbVAVjD0NDmuEaL8v/exec';
 
+    let allTickets = [], filteredExport = [];
+    let currentChannel = 'all';
+    let countdownSec = 300;
     const savedTheme = localStorage.getItem('cs_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
 
     function toggleTheme() {
         const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('cs_theme', next);
-        drawChart(allTickets); 
+        document.documentElement.setAttribute('data-theme', next); localStorage.setItem('cs_theme', next);
+        drawChart(allTickets);
     }
-
-    function toggleSearch() {
-        const wrap = document.getElementById('searchWrap');
-        wrap.classList.toggle('expanded');
-        if(wrap.classList.contains('expanded')) document.getElementById('searchInput').focus();
-    }
-
-    function toggleChannelFilter(channel, btn) {
-        currentChannelFilter = (currentChannelFilter === channel) ? 'all' : channel;
-        document.getElementById('btnLine').classList.toggle('active', currentChannelFilter === 'Line OA');
-        document.getElementById('btnFb').classList.toggle('active', currentChannelFilter === 'Facebook');
-        renderTable(); 
-    }
-
-    function shortcutFilter(status) {
-        document.getElementById('statusFilter').value = status;
+    function toggleSearch() { document.getElementById('searchBox').classList.toggle('expanded'); document.getElementById('searchInput').focus(); }
+    function toggleChannel(ch, btn) {
+        currentChannel = currentChannel === ch ? 'all' : ch;
+        document.querySelectorAll('.btn-icon').forEach(b => b.classList.remove('active'));
+        if(currentChannel !== 'all') btn.classList.add('active');
         renderTable();
     }
-    
-    function shortcutOwner(owner) {
-        document.getElementById('csFilter').value = owner === null ? 'all' : owner;
-        renderTable();
-    }
-
-    function toggleWholeMonth() {
-        const cb = document.getElementById('wholeMonthToggle');
-        cb.checked = !cb.checked;
-        renderTable();
-    }
-
+    function openModal() { document.getElementById('addModal').classList.add('open'); }
+    function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+    function filterStatus(s) { document.getElementById('statusFilter').value = s; renderTable(); }
+    function filterOwner(o) { document.getElementById('csFilter').value = o || 'all'; renderTable(); }
     function resetFilters() {
-        document.getElementById('dateFilter').value = '';
-        document.getElementById('wholeMonthToggle').checked = false;
-        document.getElementById('statusFilter').value = 'all';
-        document.getElementById('csFilter').value = 'all';
+        document.getElementById('dateFilter').value = ''; document.getElementById('monthToggle').checked = false;
+        document.getElementById('statusFilter').value = 'all'; document.getElementById('csFilter').value = 'all';
+        currentChannel = 'all'; document.querySelectorAll('.btn-icon').forEach(b => b.classList.remove('active'));
         renderTable();
     }
+    function copyCustomerName(name) {
+        navigator.clipboard.writeText(name).then(() => {
+            const t = document.getElementById('copyToast'); t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2000);
+        });
+    }
 
-    // 🟢 REFRESH TIMER LOGIC (5 Minutes)
     setInterval(() => {
-        if(countdown > 0) {
-            countdown--;
-            let mins = Math.floor(countdown/60).toString().padStart(2,'0');
-            let secs = (countdown%60).toString().padStart(2,'0');
-            // 🟢 Text updated with Beta
-            document.getElementById('countdown').innerText = `v.0.3.5 Beta | ${mins}:${secs}`;
-            document.getElementById('refreshIndicator').style.width = ((300-countdown)/300)*100 + "%";
-        } else {
-            location.reload();
-        }
+        if(countdownSec > 0) {
+            countdownSec--;
+            let m = Math.floor(countdownSec/60).toString().padStart(2,'0'), s = (countdownSec%60).toString().padStart(2,'0');
+            document.getElementById('countdown').innerText = `v.0.4.3 • Auto Refresh in ${m}:${s}`;
+            document.getElementById('refreshBar').style.width = ((300-countdownSec)/300)*100 + "%";
+        } else location.reload();
     }, 1000);
 
-    window.handleGoogleResponse = (json) => {
-        allTickets = json.table.rows.map(row => {
-            const getV = i => {
-                const cell = row.c[i];
-                if (!cell) return "-";
-                return cell.f || cell.v || "-";
-            };
-            return { 
-                ticketId: getV(0), date: getV(1), owner: getV(2), urgent: getV(3), 
-                status: getV(4), assignee: getV(5), channel: getV(6), 
-                customer: getV(11), solution: getV(13), type: getV(14), 
-                model: getV(15), issue: getV(20) 
-            };
-        }).filter(it => it.ticketId !== "-" && it.ticketId !== "Ticket ID");
-        
-        // Sorting (Priority First)
-        allTickets.sort((a, b) => {
-            const uM = { "1.ด่วนมาก": 1, "2.ปานกลาง": 2, "3.ไม่รีบ": 3 };
-            const sM = { "กำลังดำเนินการ": 1, "มอบหมาย": 2, "รอดำเนินการ": 3, "ปิดเคส": 4 };
-            if (uM[a.urgent] !== uM[b.urgent]) return (uM[a.urgent] || 99) - (uM[b.urgent] || 99);
-            return (sM[a.status] || 99) - (sM[b.status] || 99);
-        });
+    const script = document.createElement('script');
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:handleData&gid=${SHEET_GID}`;
+    document.body.appendChild(script);
 
-        renderDashboardOverview(allTickets); 
-        renderTable(); 
+    window.handleData = (json) => {
+        const rows = json.table.rows;
+        allTickets = rows.map(r => {
+            const v = (i) => (r.c[i] ? (r.c[i].f || r.c[i].v) : "-");
+            return {
+                id: v(0), date: v(1), owner: v(2), urgent: v(3), status: v(4), assignee: v(5),
+                channel: v(6), customer: v(11), issue: v(20), solution: v(13), model: v(15), type: v(14)
+            };
+        }).filter(x => x.id !== 'Ticket ID' && x.id !== '-');
+
+        allTickets.sort((a,b) => {
+            const pMap = {'1.ด่วนมาก':1, '2.ปานกลาง':2, '3.ไม่รีบ':3};
+            const sMap = {'กำลังดำเนินการ':1, 'มอบหมาย':2, 'รอดำเนินการ':3, 'ปิดเคส':4};
+            if(pMap[a.urgent] !== pMap[b.urgent]) return (pMap[a.urgent]||99) - (pMap[b.urgent]||99);
+            return (sMap[a.status]||99) - (sMap[b.status]||99);
+        });
+        updateDashboard(); renderTable();
     };
 
-    function parseDateObject(rawDate) {
-        if (!rawDate || rawDate === "-") return null;
-        let d, m, y;
-        let str = rawDate.toString().trim();
-        if (str.includes("Date")) {
-            let parts = str.match(/\d+/g);
-            if (parts && parts.length >= 3) {
-                y = parseInt(parts[0]);
-                m = parseInt(parts[1]) + 1; 
-                d = parseInt(parts[2]);
-            }
-        } else {
-            let parts = str.split(/[\/\-\.\s]+/); 
-            if (parts.length < 3) return null; 
-            let p1 = parseInt(parts[0]); let p2 = parseInt(parts[1]); let p3 = parseInt(parts[2]);
-            if (p1 > 1000) { y = p1; m = p2; d = p3; }
-            else if (p3 > 1000) { d = p1; m = p2; y = p3; }
-            else { d = p1; m = p2; y = 2000 + p3; }
-        }
-        if (y > 2400) y -= 543;
-        const mm = String(m).padStart(2, '0');
-        const dd = String(d).padStart(2, '0');
-        return { full: `${y}-${mm}-${dd}`, month: `${y}-${mm}` };
-    }
+    function updateDashboard() {
+        const stats = { total:0, active:0, pending:0, doing:0, closed:0 };
+        const team = { 'Best':{t:0,c:0}, 'Friend':{t:0,c:0}, 'Ball':{t:0,c:0}, 'Ohm':{t:0,c:0} };
+        const allTeam = { t:0, c:0 };
+        let tickerText = "";
 
-    function renderDashboardOverview(data) {
-        let stats = { g: 0, t:0, p:0, pr:0, c:0 };
-        let csStats = { "Best":{t:0,c:0}, "Friend":{t:0,c:0}, "Ball":{t:0,c:0}, "Ohm":{t:0,c:0} };
-        let teamTotal = { t:0, c:0 };
-        let urgentText = "";
-
-        data.forEach(r => {
-            const isClosed = r.status.includes("ปิด");
-            stats.g++;
-            if(r.status.includes("รอ")) stats.p++; 
-            else if(r.status.includes("ดำ") || r.status.includes("มอบ")) stats.pr++; 
-            else if(isClosed) stats.c++;
-            if(!isClosed) stats.t++; 
-            
-            if(csStats.hasOwnProperty(r.owner)) {
-                csStats[r.owner].t++;
-                if(isClosed) csStats[r.owner].c++;
+        allTickets.forEach(t => {
+            const isClosed = t.status.includes('ปิด');
+            stats.total++;
+            if(isClosed) stats.closed++;
+            else {
+                stats.active++;
+                if(t.status.includes('รอ')) stats.pending++;
+                else stats.doing++;
             }
-            teamTotal.t++;
-            if(isClosed) teamTotal.c++;
-
-            if (r.urgent.includes("1") && !isClosed) {
-                urgentText += `🔥 ${r.ticketId} ${r.customer} : ${r.issue} &nbsp;&nbsp;&nbsp;&nbsp; `;
-            }
+            if(team[t.owner]) { team[t.owner].t++; if(isClosed) team[t.owner].c++; }
+            allTeam.t++; if(isClosed) allTeam.c++;
+            if(t.urgent.includes('1') && !isClosed) tickerText += `🔥 [${t.id}] ${t.customer} (${t.issue}) &nbsp;&nbsp;&nbsp; `;
         });
 
-        const tickerContainer = document.getElementById('urgentTicker');
-        const tickerContent = document.getElementById('tickerContent');
-        if (urgentText !== "") { tickerContainer.style.display = 'flex'; tickerContent.innerHTML = urgentText; } 
-        else { tickerContainer.style.display = 'none'; }
+        document.getElementById('val-total').innerText = stats.total;
+        document.getElementById('val-active').innerText = stats.active;
+        document.getElementById('val-pending').innerText = stats.pending;
+        document.getElementById('val-doing').innerText = stats.doing;
+        document.getElementById('val-closed').innerText = stats.closed;
 
-        const allPercent = teamTotal.t === 0 ? 0 : Math.round((teamTotal.c / teamTotal.t) * 100);
-        // 🟢 Text changed from ALL TEAM to ALL
-        const allCard = `
-            <div class="person-card card-all" onclick="shortcutOwner(null)">
-                <div class="person-card-top"><span style="font-weight:800">ALL</span><span style="font-size:24px; font-weight:800">${teamTotal.t}</span></div>
-                <div><div class="perf-bar-bg"><div class="perf-bar-fill" style="width:${allPercent}%"></div></div><div class="perf-text">ปิดงาน ${allPercent}% (${teamTotal.c}/${teamTotal.t})</div></div>
-            </div>`;
+        if(tickerText) { document.getElementById('urgentTicker').style.display = 'flex'; document.getElementById('tickerContent').innerHTML = tickerText; }
 
-        const individualCards = Object.entries(csStats).map(([n, s]) => {
-            const percent = s.t === 0 ? 0 : Math.round((s.c / s.t) * 100);
-            return `
-            <div class="person-card card-${n.toLowerCase()}" onclick="shortcutOwner('${n}')">
-                <div class="person-card-top"><span style="font-weight:800">${n}</span><span style="font-size:24px; font-weight:800">${s.t}</span></div>
-                <div><div class="perf-bar-bg"><div class="perf-bar-fill" style="width:${percent}%"></div></div><div class="perf-text">ปิดงาน ${percent}% (${s.c}/${s.t})</div></div>
-            </div>`;
-        }).join('');
-        document.getElementById('csLeaderboard').innerHTML = allCard + individualCards;
+        const lb = document.getElementById('leaderboard'); lb.innerHTML = '';
+        const allPct = allTeam.t ? Math.round((allTeam.c/allTeam.t)*100) : 0;
+        lb.innerHTML += createLBCard('ALL', allTeam.t, allTeam.c, allPct, 'bg-gradient-all', null);
+        let i = 1;
+        for(const [name, s] of Object.entries(team)) {
+            const pct = s.t ? Math.round((s.c/s.t)*100) : 0;
+            lb.innerHTML += createLBCard(name, s.t, s.c, pct, `bg-gradient-${i}`, name); i++;
+        }
+        drawChart(allTickets);
+    }
 
-        document.getElementById("grandTotalCases").innerText = stats.g; 
-        document.getElementById("totalTickets").innerText = stats.t;
-        document.getElementById("pendingTickets").innerText = stats.p; 
-        document.getElementById("processTickets").innerText = stats.pr; 
-        document.getElementById("closedTickets").innerText = stats.c;
-
-        drawChart(data);
+    function createLBCard(title, total, closed, pct, bgClass, filterName) {
+        const onClick = filterName ? `onclick="filterOwner('${filterName}')"` : `onclick="filterOwner(null)"`;
+        return `<div class="lb-card ${bgClass}" ${onClick}><h3>${title}</h3><div class="count">${total}</div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div><div class="progress-label">${pct}% Closed</div></div>`;
     }
 
     function renderTable() {
-        const tbody = document.getElementById("tableBody"); tbody.innerHTML = "";
-        const search = document.getElementById("searchInput").value.toLowerCase();
-        const dateInput = document.getElementById('dateFilter').value;
-        const isWholeMonth = document.getElementById('wholeMonthToggle').checked;
-        const statusFilter = document.getElementById('statusFilter').value;
-        const csFilter = document.getElementById('csFilter').value; 
-        
-        const filteredData = allTickets.filter(r => {
-            const dateObj = parseDateObject(r.date);
-            let matchDate = true;
-            if (dateInput) {
-                if (isWholeMonth) {
-                     const inputMonth = dateInput.substring(0, 7); 
-                     if (!dateObj || dateObj.month !== inputMonth) matchDate = false;
-                } else {
-                     if (!dateObj || dateObj.full !== dateInput) matchDate = false;
-                }
+        const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const sFilter = document.getElementById('statusFilter').value;
+        const cFilter = document.getElementById('csFilter').value;
+        const dFilter = document.getElementById('dateFilter').value;
+        const mFilter = document.getElementById('monthToggle').checked;
+
+        const filtered = allTickets.filter(t => {
+            if(dFilter) {
+                const tDate = parseDate(t.date);
+                if(mFilter) { if(!tDate.startsWith(dFilter.slice(0,7))) return false; }
+                else { if(tDate !== dFilter) return false; }
             }
-            let matchStatus = true;
-            if (statusFilter === 'total-all') matchStatus = true;
-            else if (statusFilter === 'all') matchStatus = !r.status.includes("ปิด");
-            else if (statusFilter === 'กำลังดำเนินการ') matchStatus = r.status.includes("กำลัง") || r.status.includes("มอบหมาย");
-            else matchStatus = r.status.includes(statusFilter);
-
-            const matchOwner = csFilter === 'all' ? true : r.owner === csFilter;
-            const matchChannel = currentChannelFilter === 'all' ? true : r.channel.includes(currentChannelFilter);
-            const matchSearch = search==="" || r.customer.toLowerCase().includes(search) || r.model.toLowerCase().includes(search) || r.issue.toLowerCase().includes(search);
-            return matchDate && matchStatus && matchOwner && matchChannel && matchSearch;
+            if(sFilter !== 'total-all') {
+                if(sFilter === 'all' && t.status.includes('ปิด')) return false;
+                if(sFilter === 'รอดำเนินการ' && !t.status.includes('รอ')) return false;
+                if(sFilter === 'กำลังดำเนินการ' && (!t.status.includes('กำลัง') && !t.status.includes('มอบ'))) return false;
+                if(sFilter === 'ปิดเคส' && !t.status.includes('ปิด')) return false;
+            }
+            if(cFilter !== 'all' && t.owner !== cFilter) return false;
+            if(currentChannel !== 'all' && !t.channel.includes(currentChannel)) return false;
+            if(search && !JSON.stringify(t).toLowerCase().includes(search)) return false;
+            return true;
         });
-        
-        filteredExportData = filteredData;
-        if (filteredData.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding:30px; opacity:0.6;">❌ ไม่พบข้อมูล</td></tr>`;
-            return;
-        }
 
-        filteredData.forEach((r, i) => {
-            let uC = r.urgent.includes("1") ? "u-vhigh" : r.urgent.includes("2") ? "u-medium" : "u-low";
-            let sC = r.status.includes("ปิด") ? "status-closed" : r.status.includes("ดำ") ? "status-process" : "status-pending";
-            tbody.innerHTML += `<tr><td>${i+1}</td><td style="font-weight:700; color:var(--primary)">${r.ticketId}</td><td>${r.date}</td><td><span class="customer-name" onclick="copyCustomerName('${r.customer}')">${r.customer}</span></td><td><b>${r.model}</b><br><small style="opacity:0.6; font-size:11px;">${r.type}</small></td><td>${r.issue}</td><td>${r.solution}</td><td>${r.owner}</td><td><span class="badge ${uC}">${r.urgent}</span></td><td><span class="badge ${sC}">${r.status}</span></td><td>${r.assignee}</td></tr>`;
+        filteredExport = filtered;
+        if(filtered.length === 0) { tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; opacity:0.5;">ไม่พบข้อมูล</td></tr>`; return; }
+
+        filtered.forEach((t, i) => {
+            const uCol = t.urgent.includes('1') ? '#ef4444' : (t.urgent.includes('2') ? '#f59e0b' : '#3b82f6');
+            
+            // 🎨 NEW COLOR LOGIC
+            let sClass = 'status-pending'; // Default Grey
+            if(t.status.includes('ปิด')) sClass = 'status-closed'; // Green
+            else if(t.status.includes('กำลัง')) sClass = 'status-doing'; // Orange
+            else if(t.status.includes('มอบ') || t.status.includes('ส่งต่อ')) sClass = 'status-assigned'; // Blue (New!)
+
+            tbody.innerHTML += `<tr><td>${i+1}</td><td style="font-weight:600; color:var(--primary-color)">${t.id}</td><td>${t.date}</td><td style="font-weight:600;"><span class="click-to-copy" onclick="copyCustomerName(this.innerText)" title="คลิกเพื่อคัดลอก">${t.customer}</span></td><td><div style="font-weight:600;">${t.model}</div><small style="opacity:0.6">${t.type}</small></td><td style="max-width:200px;">${t.issue}</td><td style="max-width:200px;">${t.solution}</td><td>${t.owner}</td><td><span class="urgent-badge" style="background:${uCol}"></span>${t.urgent.split('.')[1]||t.urgent}</td><td><span class="status-badge ${sClass}">${t.status}</span></td></tr>`;
         });
+    }
+
+    function parseDate(str) {
+        if(!str || str==='-') return '';
+        let d, m, y;
+        if(str.includes('Date')) { const ts = parseInt(str.match(/\d+/)[0]), date = new Date(ts); y=date.getFullYear(); m=date.getMonth()+1; d=date.getDate(); }
+        else { const p = str.split(/[\/\-\.]/); if(p.length<3) return str; if(p[0].length===4) {y=p[0];m=p[1];d=p[2];} else {d=p[0];m=p[1];y=p[2];} }
+        if(y>2400) y-=543; return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     }
 
     function drawChart(data) {
-        const mC = {}; data.forEach(r => { if(r.model !== "-") mC[r.model] = (mC[r.model] || 0) + 1; });
-        const sM = Object.entries(mC).sort((a,b) => b[1]-a[1]).slice(0,10);
-        const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-        const textCol = isDark ? '#fff' : '#000';
-        const chartData = google.visualization.arrayToDataTable([['Model', 'Count'], ...sM]);
-        const options = { 
-            title: '10 อันดับสินค้า (ภาพรวม)', 
-            pieHole: 0.5, backgroundColor: 'transparent', 
-            legend: { textStyle: { color: textCol, fontName: 'Kanit', fontSize: 11 } }, 
-            titleTextStyle: { color: textCol, fontSize: 14, fontName: 'Kanit', bold: true },
-            pieSliceText: 'percentage', pieSliceTextStyle: { fontSize: 10, fontName: 'Inter' },
-            sliceVisibilityThreshold: 0.05, chartArea: { width: '90%', height: '80%' }
-        };
-        new google.visualization.PieChart(document.getElementById('chart_div')).draw(chartData, options);
-    }
-
-    function exportToCSV() {
-        if (filteredExportData.length === 0) { alert("ไม่มีข้อมูลให้ Export"); return; }
-        let csvContent = "\uFEFFTicket ID,วันที่,ลูกค้า,รุ่นสินค้า,ประเภท,อาการเสีย,วิธีแก้,CS,ความด่วน,สถานะ,ผู้รับช่วง\n";
-        filteredExportData.forEach(r => {
-            csvContent += `"${r.ticketId}","${r.date}","${r.customer}","${r.model}","${r.type}","${r.issue}","${r.solution}","${r.owner}","${r.urgent}","${r.status}","${r.assignee}"\n`;
-        });
-        const url = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
-        const link = document.createElement("a"); link.href = url; link.download = `ULKA_CS_Report.csv`; link.click();
-    }
-
-    function copyCustomerName(name) {
-        navigator.clipboard.writeText(name).then(() => {
-            const toast = document.getElementById('copyToast');
-            toast.style.display = 'block'; setTimeout(() => toast.style.display = 'none', 2000);
+        const counts = {}; data.forEach(t => { if(t.model && t.model!=='-') counts[t.model] = (counts[t.model]||0)+1; });
+        const cData = [['Model','Count']]; Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(x => cData.push(x));
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        new google.visualization.PieChart(document.getElementById('chart_div')).draw(google.visualization.arrayToDataTable(cData), {
+            backgroundColor: 'transparent', pieHole: 0.5, legend: { position: 'right', textStyle: { color: isDark ? '#cbd5e1' : '#334155', fontName:'Inter', fontSize:12 } },
+            chartArea: { left:10, top:10, width:'90%', height:'90%' }, pieSliceBorderColor: 'transparent', sliceVisibilityThreshold: 0
         });
     }
 
-    function openAddModal() { document.getElementById('addModal').style.display='block'; }
-    const script = document.createElement('script'); script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:handleGoogleResponse&gid=${SHEET_GID}`; document.body.appendChild(script);
+    function exportCSV() {
+        let csv = "ID,Date,Customer,Model,Issue,Solution,Owner,Status\n";
+        filteredExport.forEach(r => csv += `"${r.id}","${r.date}","${r.customer}","${r.model}","${r.issue}","${r.solution}","${r.owner}","${r.status}"\n`);
+        const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' })); link.download = "CS_Report.csv"; link.click();
+    }
 
     document.getElementById('ticketForm').onsubmit = function(e) {
-        e.preventDefault(); const btn = document.getElementById('submitBtn'); btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
-        fetch("https://script.google.com/macros/s/AKfycbzDRJpLUw51hZi3WI6Su7_LgeXz0GG-bK4CtfGygkmbfne2dMdtbVAVjD0NDmuEaL8v/exec", { method: 'POST', body: new URLSearchParams(new FormData(this)), mode: 'no-cors' }).then(() => location.reload());
+        e.preventDefault(); const btn = this.querySelector('button[type="submit"]'), oldText = btn.innerText; btn.innerText = "กำลังบันทึก..."; btn.disabled = true;
+        fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(new FormData(this)), mode: 'no-cors' }).then(() => location.reload()).catch(() => { alert('Error!'); btn.innerText = oldText; btn.disabled = false; });
     };
 </script>
 </body>
