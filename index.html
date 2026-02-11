@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CS Space</title>
+    <title>CS Space : Dashboard v.0.5.38 (Mobile Optimized)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -249,26 +249,67 @@
             body { overflow: auto !important; height: auto !important; }
             .app-container { flex-direction: column; height: auto; min-height: 100vh; }
             .main-content { overflow: visible; height: auto; }
-            .content-scroll { overflow: visible; height: auto; }
-            .sidebar { height: auto; flex-wrap: wrap; padding: 12px 16px; gap: 8px; justify-content: space-between; margin: 10px; border-radius: 20px; }
-            .nav-center { position: static; transform: none; background: transparent; border: none; padding: 0; width: 100%; justify-content: center; order: 3; margin-top: 5px; }
-            .nav-btn { width: 100%; justify-content: center; background: rgba(255,255,255,0.05); }
+            .content-scroll { overflow: visible; height: auto; padding: 15px; }
+            
+            /* Sidebar Optimization */
+            .sidebar { 
+                height: auto; 
+                flex-wrap: wrap; 
+                padding: 12px 16px; 
+                gap: 8px; 
+                justify-content: space-between; 
+                margin: 10px; 
+                border-radius: 20px; 
+            }
+            .brand-area { margin-bottom: 5px; width: 100%; justify-content: center; }
+            .nav-center { 
+                position: static; 
+                transform: none; 
+                background: transparent; 
+                border: none; 
+                padding: 0; 
+                width: 100%; 
+                justify-content: flex-start; /* Align left */
+                order: 3; 
+                margin-top: 5px; 
+                overflow-x: auto; /* Horizontal Scroll */
+                white-space: nowrap; /* Prevent Wrap */
+                padding-bottom: 5px;
+            }
+            .nav-center::-webkit-scrollbar { height: 4px; }
+            .nav-center::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+            .nav-btn { 
+                width: auto; 
+                flex-shrink: 0; /* Prevent shrink */
+                background: rgba(255,255,255,0.05); 
+                padding: 6px 12px;
+                font-size: 12px;
+            }
             .version-text { display: none; } 
-            .content-scroll { padding: 15px; }
+            
             .compact-wrapper, .table-wrapper-center { width: 100%; max-width: 100%; }
             .summary-grid { grid-template-columns: 1fr; }
-            .leaderboard-row, .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .leaderboard-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .dashboard-controls { flex-direction: column; align-items: stretch; gap: 10px; }
-            .lb-card, .stat-item { padding: 12px; }
+            .crm-filter-group { flex-wrap: wrap; }
+            .crm-filter-btn { flex: 1; text-align: center; white-space: nowrap; padding: 8px 10px; font-size: 11px;}
             
-            /* Mobile Scroll Override: Allow scroll on small screens if needed */
-            .table-container { overflow-x: auto; }
-            table { min-width: 600px; } 
+            .lb-card, .stat-item { padding: 10px; }
+            .stat-item .val { font-size: 18px; }
+            
+            /* Mobile Table Optimization */
+            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            table { min-width: 600px; font-size: 11px; } 
+            th, td { padding: 8px 4px; }
+            
+            .chart-card { height: 300px; padding: 10px; }
+            .chart-body { height: 100%; }
         }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
         .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--bg-body); border: 1px solid var(--card-border); width: 90%; max-width: 500px; border-radius: var(--radius-lg); padding: 30px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal-box { background: var(--bg-body); border: 1px solid var(--card-border); width: 90%; max-width: 500px; border-radius: var(--radius-lg); padding: 20px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -289,8 +330,8 @@
             <button class="nav-btn" onclick="switchPage('summary', this)">CS Summary</button>
         </div>
         
-        <div class="nav-group" style="gap:10px;">
-            <span id="countdown" class="version-text">v.0.5.37 • Loading...</span>
+        <div class="nav-group" style="gap:10px; justify-content: flex-end; width:100%; margin-top:5px;">
+            <span id="countdown" class="version-text">v.0.5.38 • Loading...</span>
             <button class="btn-primary" onclick="openModal()">+ เพิ่มเคส</button>
             <button class="icon-btn" onclick="toggleTheme()" title="สลับโหมด">🌓</button>
         </div>
@@ -544,7 +585,7 @@
         if(countdownSec > 0) {
             countdownSec--;
             let m = Math.floor(countdownSec/60).toString().padStart(2,'0'), s = (countdownSec%60).toString().padStart(2,'0');
-            document.getElementById('countdown').innerText = `v.0.5.37 • Refresh ${m}:${s}`;
+            document.getElementById('countdown').innerText = `v.0.5.38 • Refresh ${m}:${s}`;
         } else location.reload();
     }, 1000);
 
